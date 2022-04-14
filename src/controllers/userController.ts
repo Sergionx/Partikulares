@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
-import generarId from "../helpers/genId.js";
-import generarJWT from "../helpers/genJWT.js";
-import Usuario from "../models/User.js";
+import genId from "../helpers/genId";
+import genJWT from "../helpers/genJWT";
+import User from "../models/User";
 
 async function register(req: Request, res: Response) {
   // Evitar registros duplicados
   const { email } = req.body;
-  const existeUsuario = await Usuario.findOne({ email });
+  const existeUsuario = await User.findOne({ email });
   if (existeUsuario) {
     const error = new Error("Usuario ya registrado");
     return res.status(400).json({ msg: error.message });
   }
 
   try {
-    const usuario = new Usuario(req.body);
-    usuario.token = generarId();
+    const usuario = new User(req.body);
+    usuario.token = genId();
     const usuarioAlmacenado = await usuario.save();
     res.json(usuarioAlmacenado);
     console.log(usuario);
@@ -27,7 +27,7 @@ async function authenticate(req: Request, res: Response) {
   const { email, password } = req.body;
 
   // Comprobar si el usuario existe
-  const usuario = await Usuario.findOne({ email });
+  const usuario = await User.findOne({ email });
   if (!usuario) {
     const error = new Error("El usuario no ha sido encontrado");
     return res.status(400).json({ msg: error.message });
@@ -45,7 +45,7 @@ async function authenticate(req: Request, res: Response) {
       _id: usuario._id,
       nombre: usuario.nombre,
       email: usuario.email,
-      token: generarJWT(usuario._id),
+      token: genJWT(usuario._id),
     });
   } else {
     const error = new Error("El password es incorrecto");
@@ -55,7 +55,7 @@ async function authenticate(req: Request, res: Response) {
 
 async function confirm(req: Request, res: Response) {
   const { token } = req.params;
-  const usuarioConfirmar = await Usuario.findOne({ token });
+  const usuarioConfirmar = await User.findOne({ token });
 
   if (!usuarioConfirmar) {
     const error = new Error("El token no es valido");
@@ -77,14 +77,14 @@ async function forgotPassword(req: Request, res: Response) {
   const { email } = req.body;
 
   // Comprobar si el usuario existe
-  const usuario = await Usuario.findOne({ email });
+  const usuario = await User.findOne({ email });
   if (!usuario) {
     const error = new Error("El usuario no ha sido encontrado");
     return res.status(400).json({ msg: error.message });
   }
 
   try {
-    usuario.token = generarId();
+    usuario.token = genId();
     await usuario.save();
     res.json({
       msg: "Se ha enviado un correo electronico con las instrucciones",
@@ -97,7 +97,7 @@ async function forgotPassword(req: Request, res: Response) {
 async function verifyToken(req: Request, res: Response) {
   const { token } = req.params;
 
-  const tokenValido = await Usuario.findOne({ token });
+  const tokenValido = await User.findOne({ token });
   if (tokenValido) {
     res.json({ msg: "Token valido y el usuario existe" });
   } else {
@@ -110,7 +110,7 @@ async function newPassword(req: Request, res: Response) {
   const { token } = req.params;
   const { password } = req.body;
 
-  const usuario = await Usuario.findOne({ token });
+  const usuario = await User.findOne({ token });
 
   if (usuario) {
     usuario.password = password;
@@ -132,7 +132,7 @@ async function newPassword(req: Request, res: Response) {
 }
 
 async function profile(req: Request, res: Response) {
-  const {usuario} = req
+  const {usuario} = req.body
   res.json({usuario})
 }
 

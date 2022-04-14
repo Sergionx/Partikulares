@@ -3,8 +3,11 @@ import express from "express";
 import morgan from "morgan";
 
 //Routes
-import shopRoutes from "./routes/shopRoutes";
 import userRoutes from "./routes/userRoutes";
+import cartRoutes from "./routes/cartRoutes";
+import productRoutes from "./routes/productRoutes";
+import orderRoutes from "./routes/orderRoutes";
+
 
 // Intitializations
 const app = express();
@@ -17,8 +20,10 @@ app.use(morgan('dev'));
 app.use(express.json());
 
 // Routes
-app.use("/", shopRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/cart", cartRoutes);
+app.use("/api/products", productRoutes);
+app.use("api/order", orderRoutes)
 
 // Satic files
 

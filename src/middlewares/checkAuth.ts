@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 
 import jwt from "jsonwebtoken";
-import config from "../config/config.js";
-import Usuario from "../models/User.js";
+import config from "../config/config";
+import Usuario from "../models/User";
 
 async function checkAuth(req: Request, res: Response, next: NextFunction) {
   if (
