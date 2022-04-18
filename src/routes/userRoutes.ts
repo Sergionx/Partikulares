@@ -8,6 +8,7 @@ import {
   newPassword,
   profile,
 } from "../controllers/userController";
+import checkAdmin from "../middlewares/checkAdmin&Auth";
 import checkAuth from "../middlewares/checkAuth";
 
 const router = express.Router();

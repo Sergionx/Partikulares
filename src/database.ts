@@ -9,7 +9,6 @@ async function conectarDb() {
     console.log(`MongoDB conectado en ${url}`);
   } catch (error: any) {
     console.log(`error: ${error.message}`);
-    process.exit(1);
   }
 }
 export default conectarDb;
