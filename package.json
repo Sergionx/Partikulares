@@ -27,7 +27,7 @@
     "start": "node build/src",
     "clean": "del build",
     "build": "tsc",
-    "ts:node": "ts-node src/index.ts",
-    "dev": "npx nodemon ./src/index.ts"
+    "ts:node": "ts-node src/backend/index.ts",
+    "dev": "npx nodemon ./src/backend/index.ts"
   }
 }

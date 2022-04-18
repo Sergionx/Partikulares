@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import genId from "../helpers/genId";
 import genJWT from "../helpers/genJWT";
 import User from "../models/User";
-
 async function register(req: Request, res: Response) {
   // Evitar registros duplicados
   const { email } = req.body;
