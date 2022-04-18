@@ -50,5 +50,5 @@ usuarioSchema.methods.comparePassword = async function (
   return await bcrpyt.compare(passwordFormulario, this.password);
 };
 
-const Usuario = mongoose.model("Usuario", usuarioSchema);
+const Usuario = mongoose.model("User", usuarioSchema);
 export default Usuario;
