@@ -20,9 +20,18 @@ async function createProduct(req: Request, res: Response) {
 }
 
 async function getProducts(req: Request, res: Response) {
+  const { categories } = req.query;
+
   try {
-    const products = await Product.find();
-    res.json(products);
+    if (categories) {
+      const products = await Product.find({ categories: { $in: [categories] } });
+      res.json(products);
+      console.log(products);
+    } else {
+      const products = await Product.find();
+      res.json(products);
+      console.log(products);
+    }
   } catch (error) {
     console.log(error);
   }

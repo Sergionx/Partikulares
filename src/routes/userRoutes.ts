@@ -13,12 +13,15 @@ import checkAuth from "../middlewares/checkAuth";
 
 const router = express.Router();
 
-//Autenticación, Registro y Confirmación de Usuarios
-router.post("/", register); //Crea un nuevo usuario
-router.post("/login", authenticate); 
-router.get("/confirmar/:token", confirm);
-router.post("/olvide-password", forgotPassword);
-router.route("/olvide-password/:token").get(verifyToken).post(newPassword);
+// Autenticación, Registro y Confirmación de Usuarios
+router.post("/", register); // Crea un nuevo usuario
+router.post("/login", authenticate); // Loguea un nuevo usuario
+router.get("/confirmar/:token", confirm); // Confirmación del usuario
+router.post("/olvide-password", forgotPassword); // Petición del reseteo del password del usuario
+router
+  .route("/olvide-password/:token")
+  .get(verifyToken) // Verifica el token de reseteo de password
+  .post(newPassword); // Actualiza el password del usuario
 
 router.get("/perfil", checkAuth, profile);
 export default router;
