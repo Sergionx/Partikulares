@@ -1,9 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 
-import jwt from "jsonwebtoken";
-import config from "../config/config";
-import Usuario from "../models/User";
-
 async function checkAdmin(req: Request, res: Response, next: NextFunction) {
   try {
     const { usuario } = req;

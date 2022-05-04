@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Product from "../models/Product";
+import cloudinary from "../utils/upload";
 
 async function createProduct(req: Request, res: Response) {
   const { title } = req.body;
@@ -10,12 +11,19 @@ async function createProduct(req: Request, res: Response) {
   }
 
   try {
-    const product = new Product(req.body);
+    const { image } = req.body;
+    const result = await cloudinary.v2.uploader.upload(image, {
+      upload_preset: "partikulares"
+    });
+    
+    console.log(result)
+    const product = new Product({...req.body, imageUrl: result.secure_url});
+
     const savedProduct = await product.save();
     res.json(savedProduct);
     console.log(savedProduct);
   } catch (error) {
-    console.log(error);
+    //console.log(error);
   }
 }
 
@@ -24,7 +32,9 @@ async function getProducts(req: Request, res: Response) {
 
   try {
     if (categories) {
-      const products = await Product.find({ categories: { $in: [categories] } });
+      const products = await Product.find({
+        categories: { $in: [categories] },
+      });
       res.json(products);
       console.log(products);
     } else {
@@ -39,7 +49,7 @@ async function getProducts(req: Request, res: Response) {
 
 async function getProduct(req: Request, res: Response) {
   const { id } = req.params;
-  
+
   const product = await Product.findById(id);
   if (!product) {
     const error = new Error("No existe un producto con ese id");

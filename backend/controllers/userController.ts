@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import genId from "../helpers/genId";
 import genJWT from "../helpers/genJWT";
 import User from "../models/User";
+import { emailForgotPassword, emailRegistro } from "../helpers/email";
 
 async function register(req: Request, res: Response) {
   // Evitar registros duplicados
@@ -16,7 +17,17 @@ async function register(req: Request, res: Response) {
     const usuario = new User(req.body);
     usuario.token = genId();
     const usuarioAlmacenado = await usuario.save();
-    res.json(usuarioAlmacenado);
+
+    // Send Email
+    emailRegistro({
+      email: usuario.email,
+      name: usuario.name,
+      token: usuario.token,
+    });
+
+    res.json({
+      msg: "Usuario registrado correctamente. Revise su correo electronico para confirmar su cuenta",
+    });
     console.log(usuario);
   } catch (error) {
     console.log(error);
@@ -86,6 +97,13 @@ async function forgotPassword(req: Request, res: Response) {
   try {
     usuario.token = genId();
     await usuario.save();
+
+    emailForgotPassword({
+      email: usuario.email,
+      name: usuario.name,
+      token: usuario.token,
+    });
+
     res.json({
       msg: "Se ha enviado un correo electronico con las instrucciones",
     });
@@ -133,8 +151,8 @@ async function newPassword(req: Request, res: Response) {
 
 async function profile(req: Request, res: Response) {
   const { usuario } = req;
-  
-  console.log(usuario)
+
+  console.log(usuario);
   res.json({ usuario });
 }
 

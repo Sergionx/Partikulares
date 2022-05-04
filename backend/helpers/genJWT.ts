@@ -1,12 +1,14 @@
 import jwt from "jsonwebtoken";
-import config from "../config/config";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 function genJWT(id: string) {
   return jwt.sign(
     {
       id,
     },
-    config.jwtSecret,
+    process.env.JWT_SECRET as string,
     { expiresIn: "30d" }
   );
 }
