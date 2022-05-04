@@ -1,25 +1,44 @@
-import { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import AuthLayout from "./layouts/AuthLayout";
-import ConfirmAccount from "./pages/ConfirmAccount";
-import ForgotPassword from "./pages/ForgotPassword";
-import Login from "./pages/Login";
-import NewPassword from "./pages/NewPassword";
-import Register from "./pages/Register";
+import RutaProtegida from "./layouts/RutaProtegida";
+
+import ConfirmAccount from "./pages/user/ConfirmAccount";
+import Error404 from "./pages/Error404";
+import ForgotPassword from "./pages/user/ForgotPassword";
+import Login from "./pages/user/Login";
+import NewPassword from "./pages/user/NewPassword";
+import Register from "./pages/user/Register";
+import Shop from "./pages/shop/Shop";
+import Product from "./pages/shop/Product";
+import NewProduct from "./pages/shop/NewProduct";
+
+import { AuthProvider } from "./context/AuthProvider";
+import { ProductProvider } from "./context/ProductProvider";
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AuthLayout />}>
-          <Route index element={<Login />} />
-          <Route index element={<Register />} />
-          <Route path="registrar" element={<Register />} />
-          <Route path="olvide-password" element={<ForgotPassword />} />
-          <Route path="olvide-password/:id" element={<NewPassword />} />
-          <Route path="confirmar/:id" element={<ConfirmAccount />} />
-        </Route>
-      </Routes>
+      <AuthProvider>
+          <Routes>
+            <Route path="/user" element={<AuthLayout />}>
+              <Route index element={<Login />} />
+              <Route path="registrar" element={<Register />} />
+              <Route path="olvide-password" element={<ForgotPassword />} />
+              <Route path="olvide-password/:token" element={<NewPassword />} />
+              <Route path="confirmar/:id" element={<ConfirmAccount />} />
+              <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina 404
+            </Route>
+
+            <Route path="/" element={<RutaProtegida />}>
+              <Route index element={<Shop />} />
+              <Route path=":title" element={<Product />} />
+              <Route path="crear-producto" element={<NewProduct />} /> //TODO -Crear una pagina de crear producto
+              <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina 404
+            </Route>
+          </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }
