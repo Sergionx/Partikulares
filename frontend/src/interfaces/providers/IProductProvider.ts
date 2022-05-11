@@ -1,5 +1,5 @@
 import IAuth from "../IAuth";
-import IProduct from "../IProduct";
+import IProduct from "../../../../backend/models/interfaces/IProduct";
 
 interface IProductProvider {
   products: IProduct[];

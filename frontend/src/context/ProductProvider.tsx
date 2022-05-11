@@ -1,16 +1,16 @@
 import React, { createContext, useEffect, useState } from "react";
-import IProduct from "../interfaces/IProduct";
+import IProduct from "../../../backend/models/interfaces/IProduct";
 import { IProps } from "../interfaces/IProps";
-import IProdcutProvider from "../interfaces/providers/IProductProvider";
+import IProductProvider from "../interfaces/providers/IProductProvider";
 
-const ProductContext = createContext<IProdcutProvider>({
+const ProductContext = createContext<IProductProvider>({
   products: [],
 });
 
 function ProductProvider({ children }: IProps) {
   const [products, setProducts] = useState<IProduct[]>([]);
 
-  const value: IProdcutProvider = { products };
+  const value: IProductProvider = { products };
   return (
     <ProductContext.Provider value={value}>{children}</ProductContext.Provider>
   );

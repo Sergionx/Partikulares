@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import axiosClient from "../config/axiosClient";
-import IAlerta from "../interfaces/IAlert";
-import Alert from "./Alert";
+import axiosClient from "../../config/axiosClient";
+import IAlerta from "../../interfaces/IAlert";
+import ICategory from "../../../../backend/models/interfaces/ICategory";
+import Alert from "../Alert";
+import CategoriesSelecter from "../Category/CategoriesSelecter";
 
 function ProductForm() {
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [precio, setPrecio] = useState(0);
-  const [categoria, setCategoria] = useState([]);
-  
+  const [categorias, setCategorias] = useState<ICategory[]>([]);
+
   const [image, setImage] = useState("");
   const [previewSource, setPreviewSource] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -26,20 +28,37 @@ function ProductForm() {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-        setPreviewSource(reader.result as string);
+      setPreviewSource(reader.result as string);
     };
-};
+  }
 
   async function handlePostProduct(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    if (!nombre || !descripcion || !precio || !Image || !categoria) {
+    if (!nombre || !descripcion || !precio || !selectedFile || !categorias) {
       setAlerta({
         msg: "Todos los campos son obligatorios",
         error: true,
       });
       return;
     }
+
+    if (precio < 0) {
+      setAlerta({
+        msg: "El precio no puede ser negativo",
+        error: true,
+      });
+      return;
+    }
+
+    if (categorias.length < 1) {
+      setAlerta({
+        msg: "Selecciona al menos una categoría",
+        error: true,
+      });
+      return;
+    }
+
     const token = localStorage.getItem("token");
 
     const config = {
@@ -52,7 +71,7 @@ function ProductForm() {
     try {
       const reader = new FileReader();
       reader.readAsDataURL(selectedFile as any);
-      
+
       reader.onloadend = async () => {
         const { data } = await axiosClient.post(
           "/products",
@@ -61,22 +80,49 @@ function ProductForm() {
             description: descripcion,
             price: precio,
             image: reader.result,
-            categories: categoria,
+            categories: categorias,
           },
           config
         );
+
+        categorias.forEach(async (categoria) => {
+          await axiosClient.post(
+            `categories/${categoria._id.toString()}/products`,
+            {
+              productId: data._id,
+            }
+          );
+        });
+        
+        setNombre("");
+        setDescripcion("");
+        setPrecio(0);
+        setCategorias([]);
+        setImage("");
+        setPreviewSource("");
+        setSelectedFile(null);
+        
         setAlerta({
           msg: data.msg,
           error: false,
         });
-      }
-      
+      };
     } catch (error: any) {
       console.log(error);
       setAlerta({
         msg: error.response.data.msg,
         error: true,
       });
+    }
+  }
+
+  function saveCategoryHandler(category: ICategory, add: boolean) {
+    //TODO- REVISAR ESTO
+    if (add){
+      setCategorias([...categorias, category]);
+    }
+    else{
+      setCategorias(categorias.filter(c => c._id !== category._id));
     }
   }
 
@@ -164,13 +210,11 @@ function ProductForm() {
             onChange={handleImageChange}
           />
         </div>
-        
+
         {previewSource && (
           <img src={previewSource} alt="chosen" style={{ height: "300px" }} />
         )}
-        
-        //TODO- Add componente que cargue la lista de categorias y deje al
-        usuario escoger y buscar de alli
+        <CategoriesSelecter onSaveCategory={saveCategoryHandler} />
         <input
           type="submit"
           value="Crear Producto"

@@ -11,7 +11,7 @@ import Login from "./pages/user/Login";
 import NewPassword from "./pages/user/NewPassword";
 import Register from "./pages/user/Register";
 import Shop from "./pages/shop/Shop";
-import Product from "./pages/shop/Product";
+import Product from "./components/Product/Product";
 import NewProduct from "./pages/shop/NewProduct";
 
 import { AuthProvider } from "./context/AuthProvider";

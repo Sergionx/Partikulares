@@ -9,13 +9,14 @@ function RutaProtegida() {
   const { auth, cargando } = useAuth();
 
   if (cargando) return <p>Cargando</p>;
+  //TODO - Arreglar sidebar cuando la pantalla se hace chica (en especial telefonos)
   return (
     <>
       {auth._id ? (
         <div className="bg-green-50">
           <Header />
           <div className="md:flex md:min-h">
-            <SideBar />
+            <SideBar /> 
             <main className="p-3 flex-1 ">
               <Outlet />
             </main>
