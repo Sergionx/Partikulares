@@ -23,7 +23,7 @@ async function createProduct(req: Request, res: Response) {
     res.json(savedProduct);
     console.log(savedProduct);
   } catch (error) {
-    //console.log(error);
+    console.log(error);
   }
 }
 

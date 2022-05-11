@@ -152,7 +152,6 @@ async function newPassword(req: Request, res: Response) {
 async function profile(req: Request, res: Response) {
   const { usuario } = req;
 
-  console.log(usuario);
   res.json({ usuario });
 }
 
