@@ -12,6 +12,7 @@ import orderRoutes from "./routes/orderRoutes";
 
 // Others
 import conenctarDb from "./database";
+import categoriesRoutes from "./routes/categoriesRoutes";
 
 // Intitializations
 const app = express();
@@ -46,7 +47,8 @@ app.use(express.urlencoded({ limit: "50mb", extended: false }));
 app.use("/api/users", userRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/products", productRoutes);
-app.use("api/orders", orderRoutes);
+app.use("/api/orders", orderRoutes);
+app.use("/api/categories", categoriesRoutes);
 
 // Satic files
 
