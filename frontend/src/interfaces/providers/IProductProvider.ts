@@ -1,7 +1,8 @@
 import IAuth from "../IAuth";
 import IProduct from "../../../../backend/models/interfaces/IProduct";
+import IAlerta from "../IAlert";
 
-interface IProductProvider {
+interface  IProductProvider {
   products: IProduct[];
 }
 

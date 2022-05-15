@@ -32,6 +32,7 @@ function ProductForm() {
     };
   }
 
+  //TODO- Cuando se cree un nuevo procucto hacer que las categorias se deseleccionen
   async function handlePostProduct(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -60,6 +61,13 @@ function ProductForm() {
     }
 
     const token = localStorage.getItem("token");
+    if (!token) {
+      setAlerta({
+        msg: "No tienes permisos para realizar esta acción",
+        error: true,
+      });
+      return;
+    }
 
     const config = {
       headers: {
@@ -73,6 +81,7 @@ function ProductForm() {
       reader.readAsDataURL(selectedFile as any);
 
       reader.onloadend = async () => {
+        //TODO- Considera si ponerlo en ProductProvider
         const { data } = await axiosClient.post(
           "/products",
           {
@@ -93,7 +102,7 @@ function ProductForm() {
             }
           );
         });
-        
+
         setNombre("");
         setDescripcion("");
         setPrecio(0);
@@ -101,9 +110,9 @@ function ProductForm() {
         setImage("");
         setPreviewSource("");
         setSelectedFile(null);
-        
+
         setAlerta({
-          msg: data.msg,
+          msg: "Su producto ha sido creado con éxito",
           error: false,
         });
       };
@@ -118,11 +127,10 @@ function ProductForm() {
 
   function saveCategoryHandler(category: ICategory, add: boolean) {
     //TODO- REVISAR ESTO
-    if (add){
+    if (add) {
       setCategorias([...categorias, category]);
-    }
-    else{
-      setCategorias(categorias.filter(c => c._id !== category._id));
+    } else {
+      setCategorias(categorias.filter((c) => c._id !== category._id));
     }
   }
 
