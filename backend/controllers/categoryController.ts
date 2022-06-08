@@ -84,7 +84,7 @@ async function deleteCategory(req: Request, res: Response) {
   }
 }
 
-async function addProductToCategory(req: Request, res: Response){
+async function addProductToCategory(req: Request, res: Response) {
   const { id } = req.params;
 
   const category = await Category.findById(id);
@@ -102,8 +102,13 @@ async function addProductToCategory(req: Request, res: Response){
   }
 
   try {
-    const updatedCategory = await Category.updateOne(category, { $push: { products: productId } });
-    res.json(updatedCategory);
+    const updatedCategory = await Category.updateOne(category, {
+      $push: { products: productId },
+    });
+    const updatedProduct = await Product.updateOne(product, {
+      $push: { categories: id },
+    });
+    res.json({ updatedCategory, updatedProduct });
     console.log(category);
   } catch (error) {
     console.log(error);
