@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const transport = nodemailer.createTransport({
-  host: "process.env.EMAIL_HOST as string",
+  host: process.env.EMAIL_HOST as string,
   port: parseInt(process.env.EMAIL_PORT as string),
   auth: {
     user: process.env.EMAIL_USER as string,
