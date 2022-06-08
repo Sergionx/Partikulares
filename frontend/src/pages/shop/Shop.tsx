@@ -4,7 +4,6 @@ import useProduct from "../../hooks/useProduct";
 
 export function Shop() {
   const { products } = useProduct();
-  console.log(products);
   let hola =
     "min-h screen bg-gray-200 flex items-center justify-center antialiased";
   return (
@@ -14,7 +13,7 @@ export function Shop() {
 
         <div className="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {products.map((product) => (
-            <div key={product._id.toString()} className="group relative">
+            <div key={product._id!.toString()} className="group relative">
               <ProductCard product={product} />
             </div>
           ))}
