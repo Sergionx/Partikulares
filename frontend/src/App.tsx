@@ -12,9 +12,10 @@ import NewPassword from "./pages/user/NewPassword";
 import Register from "./pages/user/Register";
 import Shop from "./pages/shop/Shop";
 import NewProduct from "./pages/shop/NewProduct";
+import ProductDetails from "./pages/shop/ProductDetails";
+import CartCheckout from "./pages/shop/CartCheckout";
 
 import { AuthProvider } from "./context/AuthProvider";
-import ProductDetails from "./pages/shop/ProductDetails";
 
 function App() {
   return (
@@ -28,16 +29,16 @@ function App() {
             <Route path="olvide-password/:token" element={<NewPassword />} />
             <Route path="confirmar/:id" element={<ConfirmAccount />} />
             <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
-            404
+            de error 404
           </Route>
 
-          <Route path="/" element={<RutaProtegida />}>
+          <Route path="/shop" element={<RutaProtegida />}>
             <Route index element={<Shop />} />
-            <Route path="crear-producto" element={<NewProduct />} /> //TODO
-            -Crear una pagina de crear producto
+            <Route path="crear-producto" element={<NewProduct />} />
             <Route path=":title" element={<ProductDetails />} />
-            <Route path="*" element={<Error404 />} /> //TODO - Crear unapagina
-            404
+            <Route path="cart" element={<CartCheckout />} /> 
+            <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
+            de error 404
           </Route>
         </Routes>
       </AuthProvider>
