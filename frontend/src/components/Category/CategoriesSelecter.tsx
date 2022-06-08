@@ -87,11 +87,11 @@ function CategoriesSelecter(props: ICategoriesSelecter) {
 
         <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-4 lg:gap-x-6">
           {filteredCategories.map((category) => (
-            <div className="py-2">
+            <div key={category._id.toString()} className="py-2">
               <Category
-                key={category._id.toString()}
                 category={category}
                 onSaveCategory={props.onSaveCategory}
+                isLink={false}
               />
             </div>
           ))}
