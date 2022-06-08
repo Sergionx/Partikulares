@@ -72,7 +72,7 @@ function ProductForm() {
             description: descripcion,
             image: reader.result,
             price: precio,
-            categories: [],
+            categories: [], //No se va a usar, pero la interfaz me obliga a usarlo
             imageUrl: null,
             _id: null,
           }, categorias);
