@@ -40,7 +40,6 @@ async function getProducts(req: Request, res: Response) {
     } else {
       const products = await Product.find();
       res.json(products);
-      console.log(products);
     }
   } catch (error) {
     console.log(error);
