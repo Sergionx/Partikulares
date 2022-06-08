@@ -2,12 +2,13 @@ import ICategory from "./ICategory";
 import { Types } from "mongoose";
 
 interface IProduct {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId | null;
   title: string;
   description: string;
   price: number;
-  imageUrl: string;
-  categories: ICategory[];
+  imageUrl: string | null;
+  image: string | ArrayBuffer | null;
+  categories: [];
 }
 
 export default IProduct;

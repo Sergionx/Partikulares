@@ -1,10 +1,9 @@
-import IProduct from "./IProduct";
 import { Types } from "mongoose";
 
 interface ICategory {
-  _id: Types.ObjectId;
+  _id: Types.ObjectId | string;
   title: string;
-  products: IProduct[];
+  products: string[];
 }
 
 export default ICategory;
