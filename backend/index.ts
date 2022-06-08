@@ -25,7 +25,6 @@ const corsOptions = {
   origin: function (origin: any, callback: any) {
     if (whitelist.includes(origin)) {
       // Puede consultar la API
-      console.log("Puede consultar la API");
       callback(null, true);
     } else {
       // No puede consultar la API
@@ -33,7 +32,7 @@ const corsOptions = {
     }
   },
 };
-app.use(cors()); //TODO- Add corsOptions
+app.use(cors(corsOptions));
 
 // Settings
 app.set("port", process.env.PORT || 4000);
