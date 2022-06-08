@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import axiosClient from "../../config/axiosClient";
-import IAlerta from "../../interfaces/IAlert";
 import ICategory from "../../../../backend/models/interfaces/ICategory";
 import Alert from "../Alert";
 import CategoriesSelecter from "../Category/CategoriesSelecter";
+import useProduct from "../../hooks/useProduct";
 
 function ProductForm() {
   const [nombre, setNombre] = useState("");
@@ -15,7 +15,7 @@ function ProductForm() {
   const [previewSource, setPreviewSource] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
 
-  const [alerta, setAlerta] = useState<IAlerta>({ msg: "", error: false });
+  const {mostrarAlerta, alerta, submitProduct} = useProduct();
 
   function handleImageChange(e: any) {
     const file = e.target.files[0];
@@ -37,7 +37,7 @@ function ProductForm() {
     e.preventDefault();
 
     if (!nombre || !descripcion || !precio || !selectedFile || !categorias) {
-      setAlerta({
+      mostrarAlerta({
         msg: "Todos los campos son obligatorios",
         error: true,
       });
@@ -45,7 +45,7 @@ function ProductForm() {
     }
 
     if (precio < 0) {
-      setAlerta({
+      mostrarAlerta({
         msg: "El precio no puede ser negativo",
         error: true,
       });
@@ -53,28 +53,12 @@ function ProductForm() {
     }
 
     if (categorias.length < 1) {
-      setAlerta({
+      mostrarAlerta({
         msg: "Selecciona al menos una categoría",
         error: true,
       });
       return;
     }
-
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setAlerta({
-        msg: "No tienes permisos para realizar esta acción",
-        error: true,
-      });
-      return;
-    }
-
-    const config = {
-      headers: {
-        Content0type: "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    };
 
     try {
       const reader = new FileReader();
@@ -82,26 +66,16 @@ function ProductForm() {
 
       reader.onloadend = async () => {
         //TODO- Considera si ponerlo en ProductProvider
-        const { data } = await axiosClient.post(
-          "/products",
+        submitProduct(
           {
             title: nombre,
             description: descripcion,
-            price: precio,
             image: reader.result,
-            categories: categorias,
-          },
-          config
-        );
-
-        categorias.forEach(async (categoria) => {
-          await axiosClient.post(
-            `categories/${categoria._id.toString()}/products`,
-            {
-              productId: data._id,
-            }
-          );
-        });
+            price: precio,
+            categories: [],
+            imageUrl: null,
+            _id: null,
+          }, categorias);
 
         setNombre("");
         setDescripcion("");
@@ -110,15 +84,10 @@ function ProductForm() {
         setImage("");
         setPreviewSource("");
         setSelectedFile(null);
-
-        setAlerta({
-          msg: "Su producto ha sido creado con éxito",
-          error: false,
-        });
       };
     } catch (error: any) {
       console.log(error);
-      setAlerta({
+      mostrarAlerta({
         msg: error.response.data.msg,
         error: true,
       });
