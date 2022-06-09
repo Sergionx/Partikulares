@@ -2,7 +2,7 @@ import ICategory from "./ICategory";
 import { Types } from "mongoose";
 
 interface IProduct {
-  _id: Types.ObjectId | null;
+  _id: Types.ObjectId | string;
   title: string;
   description: string;
   price: number;
