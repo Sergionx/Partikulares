@@ -3,15 +3,15 @@ import Cart from "../models/Cart";
 import IProduct from "../models/interfaces/IProduct";
 
 async function createCart(req: Request, res: Response) {
-  const existeCart = await Cart.find({ user: req.body.user });
+  const existeCart = await Cart.findOne({ user: req.usuario._id });
   if (existeCart) {
+    console.log(existeCart)
     const error = new Error("El usuario ya tiene un carrito");
     return res.status(400).json({ msg: error.message });
   }
 
   try {
-    const { userId } = req.body;
-    const cart = new Cart({ userId, products: req.body.cartItems });
+    const cart = new Cart({ user: req.usuario._id, products: req.body.products });
     await cart.save();
     res.status(201).json(cart);
   } catch (error) {
