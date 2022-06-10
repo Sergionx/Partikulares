@@ -10,7 +10,7 @@ import IProductProvider from "../interfaces/providers/IProductProvider";
 const ProductContext = createContext<IProductProvider>({
   products: [],
   product: {
-    _id: null,
+    _id: "",
     title: "",
     description: "",
     price: 0,
@@ -27,7 +27,7 @@ const ProductContext = createContext<IProductProvider>({
 function ProductProvider({ children }: IProps) {
   const [products, setProducts] = useState<IProduct[]>([]);
   const [product, setProduct] = useState<IProduct>({
-    _id: null,
+    _id: "",
     title: "",
     description: "",
     price: 0,
