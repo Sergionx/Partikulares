@@ -12,10 +12,9 @@ const router = express.Router();
 router
   .route("/")
   .post(checkAuth, createCart) // Crea un nuevo carrito
-  .get(checkAuth, getCart); // Devuelve el carrito del usuario
-router
-  .route("/:id")
+  .get(checkAuth, getCart) // Devuelve el carrito del usuario
   .put(checkAuth, addProduct) // Agrega un producto al carrito
   .delete(checkAuth, deleteCart); // Elimina el carrito del usuario
+
 
 export default router;

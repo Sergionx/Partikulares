@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
 import Cart from "../models/Cart";
-import IProduct from "../models/interfaces/IProduct";
 
 async function createCart(req: Request, res: Response) {
   const existeCart = await Cart.findOne({ user: req.usuario._id });
   if (existeCart) {
-    console.log(existeCart)
+    console.log(existeCart);
     const error = new Error("El usuario ya tiene un carrito");
     return res.status(400).json({ msg: error.message });
   }
 
   try {
-    const cart = new Cart({ user: req.usuario._id, products: req.body.products });
+    const cart = new Cart({
+      user: req.usuario._id,
+      products: req.body.products,
+    });
     await cart.save();
     res.status(201).json(cart);
   } catch (error) {
@@ -20,11 +22,12 @@ async function createCart(req: Request, res: Response) {
 }
 
 async function getCart(req: Request, res: Response) {
-  const { id } = req.params;
-  const cart = await Cart.findOne({ id });
+  const cart = await Cart.findOne({ user: req.usuario._id });
   if (!cart) {
-    const error = new Error("No existe un producto con ese id");
-    return res.status(404).json({ msg: error.message });
+    const error = new Error(
+      "No existe un usuario con ese id que tenga un carrito"
+    );
+    return res.status(404).json({ msg: error.message, status: 404 });
   }
 
   try {
@@ -36,34 +39,37 @@ async function getCart(req: Request, res: Response) {
 }
 
 async function addProduct(req: Request, res: Response) {
-  const { id } = req.params;
   const { productId } = req.body;
 
-  const cart = await Cart.findById(id);
+  const cart = await Cart.findOne({ user: req.usuario._id });
   if (!cart) {
-    const error = new Error("No existe un carrito con ese id");
+    const error = new Error(
+      "No existe un usuario con ese id que tenga un carrito"
+    );
     return res.status(404).json({ msg: error.message });
   }
 
   try {
-    const product = await cart.products.find(
-      (product: IProduct) => product._id!.toString() === productId
+    console.log(cart.products);
+    const productIndex = cart.products.findIndex(
+      (p: any) => p.product == productId
     );
 
-    if (product) {
+    if (productIndex >= 0) {
       const updatedCart = await Cart.updateOne(
-        { id },
-        { $inc: { "products.$.quantity": 1 } }
+        { user: req.usuario._id },
+        { $inc: { "products.$[element].quantity": 1 } },
+        {arrayFilters: [{ "element.product": productId }]}
       );
-      res.json(updatedCart);
-      console.log(updatedCart);
+
+      res.status(201).json(updatedCart);
     } else {
       const updatedCart = await Cart.updateOne(
-        { id },
-        { $push: { products: { productId, quantity: 1 } } }
+        { user: req.usuario._id },
+        { $push: { products: { product: productId, quantity: 1 } } }
       );
-      res.json(updatedCart);
-      console.log(updatedCart);
+      
+      res.status(201).json(updatedCart);
     }
   } catch (error) {
     console.log(error);
@@ -71,11 +77,11 @@ async function addProduct(req: Request, res: Response) {
 }
 
 async function deleteCart(req: Request, res: Response) {
-  const { id } = req.params;
-
-  const cart = await Cart.findById(id);
+  const cart = await Cart.findOne({ user: req.usuario._id });
   if (!cart) {
-    const error = new Error("No existe un producto con ese id");
+    const error = new Error(
+      "No existe un usuario con ese id que tenga un carrito"
+    );
     return res.status(404).json({ msg: error.message });
   }
 
