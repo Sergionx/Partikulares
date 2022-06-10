@@ -13,11 +13,11 @@ async function createProduct(req: Request, res: Response) {
   try {
     const { image } = req.body;
     const result = await cloudinary.v2.uploader.upload(image, {
-      upload_preset: "partikulares"
+      upload_preset: "partikulares",
     });
-    
-    console.log(result)
-    const product = new Product({...req.body, imageUrl: result.secure_url});
+
+    console.log(result);
+    const product = new Product({ ...req.body, imageUrl: result.secure_url });
 
     const savedProduct = await product.save();
     res.json(savedProduct);
@@ -49,8 +49,14 @@ async function getProducts(req: Request, res: Response) {
 async function getProduct(req: Request, res: Response) {
   const { id } = req.params;
 
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    const error = new Error("Id no valido");
+    return res.status(400).json({ msg: error.message });
+  }
+
   const product = await Product.findById(id);
   if (!product) {
+    console.log(product);
     const error = new Error("No existe un producto con ese id");
     return res.status(404).json({ msg: error.message });
   }
@@ -65,6 +71,11 @@ async function getProduct(req: Request, res: Response) {
 
 async function updateProduct(req: Request, res: Response) {
   const { id } = req.params;
+
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    const error = new Error("Id no valido");
+    return res.status(400).json({ msg: error.message });
+  }
 
   const product = await Product.findById(id);
   if (!product) {
@@ -83,6 +94,11 @@ async function updateProduct(req: Request, res: Response) {
 
 async function deleteProduct(req: Request, res: Response) {
   const { id } = req.params;
+
+  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+    const error = new Error("Id no valido");
+    return res.status(400).json({ msg: error.message });
+  }
 
   const product = await Product.findById(id);
   if (!product) {

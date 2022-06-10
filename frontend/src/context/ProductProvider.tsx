@@ -121,7 +121,6 @@ function ProductProvider({ children }: IProps) {
       const { data } = await axiosClient.get(`/products/${productId}`);
       setProduct(data);
     } catch (error: any) {
-      console.log(error);
       setAlerta({
         msg: "No se pudo obtener el producto",
         error: true,
