@@ -54,17 +54,17 @@ async function addProduct(req: Request, res: Response) {
     );
 
     if (productIndex >= 0) {
-      const updatedCart = await Cart.updateOne(
+      const updatedCart = await Cart.findOneAndUpdate(
         { user: req.usuario._id },
         { $inc: { "products.$[element].quantity": 1 } },
-        {arrayFilters: [{ "element.product": productId }]}
+        { arrayFilters: [{ "element.product": productId }], new: true }
       );
 
       res.status(201).json(updatedCart);
     } else {
-      const updatedCart = await Cart.updateOne(
+      const updatedCart = await Cart.findOneAndUpdate(
         { user: req.usuario._id },
-        { $push: { products: { product: productId, quantity: 1 } } }
+        { $push: { products: { product: productId, quantity: 1 } }, new: true }
       );
 
       res.status(201).json(updatedCart);
