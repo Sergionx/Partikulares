@@ -4,7 +4,6 @@ import Cart from "../models/Cart";
 async function createCart(req: Request, res: Response) {
   const existeCart = await Cart.findOne({ user: req.usuario._id });
   if (existeCart) {
-    console.log(existeCart);
     const error = new Error("El usuario ya tiene un carrito");
     return res.status(400).json({ msg: error.message });
   }
@@ -50,7 +49,6 @@ async function addProduct(req: Request, res: Response) {
   }
 
   try {
-    console.log(cart.products);
     const productIndex = cart.products.findIndex(
       (p: any) => p.product == productId
     );
@@ -68,7 +66,7 @@ async function addProduct(req: Request, res: Response) {
         { user: req.usuario._id },
         { $push: { products: { product: productId, quantity: 1 } } }
       );
-      
+
       res.status(201).json(updatedCart);
     }
   } catch (error) {
