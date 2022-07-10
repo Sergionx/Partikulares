@@ -42,7 +42,7 @@ function Login() {
 
       localStorage.setItem("token", data.token); // TODO - Guardar el token como una cookie
       setAuth(data);
-      navigate("/"); //TODO - Redireccionar al home
+      navigate("/shop"); //TODO - Redireccionar al home
     } catch (error: any) {
       console.log(error);
       setAlerta({

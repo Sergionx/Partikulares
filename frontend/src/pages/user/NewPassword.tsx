@@ -85,7 +85,7 @@ function NewPassword() {
       setRepetirContrasena("");
       setNuevoPassword(true);
 
-      navigate("/login");
+      navigate("/user/login");
     } catch (error: any) {
       setAlert({
         msg: error.response.data.msg,
