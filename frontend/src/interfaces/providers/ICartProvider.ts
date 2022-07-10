@@ -1,11 +1,11 @@
-import ICart from "../../../../backend/models/interfaces/ICart";
 import IProduct from "../../../../backend/models/interfaces/IProduct";
-
+import IAlerta from "../IAlert";
+import IProductCart from "../IProductCart";
 
 interface ICartProvider {
-  setCart: React.Dispatch<React.SetStateAction<ICart>>
-  cart: ICart
-  addProduct(product: IProduct): void
+  productsCart: IProductCart[];
+  addProduct(product: IProduct, quantity: number): void
+  alertaCart: IAlerta
 }
 
 export default ICartProvider;

@@ -1,17 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ICategory from "../../../../backend/models/interfaces/ICategory";
+import Alert from "../../components/Alert";
 import Category from "../../components/Category/Category";
 import axiosClient from "../../config/axiosClient";
+import useCart from "../../hooks/useCart";
 import useProduct from "../../hooks/useProduct";
 
 function ProductDetails() {
   const params = useParams();
 
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [precio, setPrecio] = useState(0);
+  const [cantidad, setCantidad] = useState(1);
 
-  const { obtenerProducto, product, mostrarAlerta } = useProduct();
+  const { obtenerProducto, product, mostrarAlerta, alerta } = useProduct();
+  const { addProduct, alertaCart } = useCart();
+
+  const navigate = useNavigate();
 
   const categorias: ICategory[] = [
     {
@@ -53,14 +58,26 @@ function ProductDetails() {
     }
   }, []);
 
-  async function handleBuyBtn(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  async function handleBuy(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
   }
 
+  async function handleAddToCart(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    e.preventDefault();
+    addProduct(product, cantidad);
+    setCantidad(1);
+    //navigate(`/cart/${id}`)
+  }
+
+  const { msg } = alerta;
+  const msgCart = alertaCart.msg;
+
   return (
     <main className="mx-auto pt-14 px-4 sm:pt-16 sm:pb-32 sm:px-6 lg:max-w-7x1 lg:px-8">
+      {msgCart && <Alert alerta={alertaCart} />}
+      {msg && <Alert alerta={alerta} />}
       {/* Product */}
       <div className="lg:grid lg:grid-cols-7 lg:gap-x-8 lg:gap-y-10 xl:gap-x-16">
         {/* Product image */}
@@ -84,7 +101,7 @@ function ProductDetails() {
 
           <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-4 lg:gap-x-6">
             {categories.map((category) => (
-              <div key={category.toString()} className="py-2">
+              <div key={category._id.toString()} className="py-2">
                 <Category
                   category={category}
                   onSaveCategory={() => {}}
@@ -96,14 +113,13 @@ function ProductDetails() {
 
           <div className="my-5 flex">
             <input
-              id="precio"
+              id="cantidad"
               type="number"
               className="flex border-2 w-full placeholder-gray-400
         rounded-md"
-              placeholder="Precio del Producto"
-              value={precio}
+              value={cantidad}
               style={{ width: "100px" }}
-              onChange={(e) => setPrecio(parseInt(e.target.value))}
+              onChange={(e) => setCantidad(parseInt(e.target.value))}
             />
             <p className="flex">{product.price} $ </p>
           </div>
@@ -114,7 +130,7 @@ function ProductDetails() {
               className="w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 flex items-center
               justify-center text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2
               focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
-              onClick={handleBuyBtn}
+              onClick={handleBuy}
             >
               COMPRAR YA
             </button>
@@ -124,7 +140,7 @@ function ProductDetails() {
               className="w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 flex items-center
               justify-center text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2
               focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-gray-500"
-              onClick={handleBuyBtn}
+              onClick={handleAddToCart}
             >
               Añadir al carrito
             </button>
