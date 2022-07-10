@@ -15,8 +15,6 @@ const transport = nodemailer.createTransport({
 export async function emailRegistro(datos: any) {
   const { email, name, token } = datos;
 
-  // TODO: recordar ponerlo en el .env
-
   const info = await transport.sendMail({
     from: '"Partikulares" <cuentas@partikulares.com>',
     to: email,
