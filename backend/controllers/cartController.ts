@@ -39,6 +39,12 @@ async function getCart(req: Request, res: Response) {
 
 async function addProduct(req: Request, res: Response) {
   const { productId } = req.body;
+  const { quantity } = req.body;
+
+  if (quantity < 1) {
+    const error = new Error("La cantidad debe ser mayor a 0");
+    return res.status(400).json({ msg: error.message });
+  }
 
   const cart = await Cart.findOne({ user: req.usuario._id });
   if (!cart) {
@@ -56,7 +62,7 @@ async function addProduct(req: Request, res: Response) {
     if (productIndex >= 0) {
       const updatedCart = await Cart.findOneAndUpdate(
         { user: req.usuario._id },
-        { $inc: { "products.$[element].quantity": 1 } },
+        { $inc: { "products.$[element].quantity": quantity } },
         { arrayFilters: [{ "element.product": productId }], new: true }
       );
 
@@ -64,7 +70,7 @@ async function addProduct(req: Request, res: Response) {
     } else {
       const updatedCart = await Cart.findOneAndUpdate(
         { user: req.usuario._id },
-        { $push: { products: { product: productId, quantity: 1 } }, new: true }
+        { $push: { products: { product: productId, quantity: quantity } }, new: true }
       );
 
       res.status(201).json(updatedCart);
