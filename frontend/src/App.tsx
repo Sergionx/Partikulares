@@ -35,11 +35,18 @@ function App() {
           <Route path="/shop" element={<RutaProtegida />}>
             <Route index element={<Shop />} />
             <Route path="crear-producto" element={<NewProduct />} />
-            <Route path=":title" element={<ProductDetails />} />
-            <Route path="cart" element={<CartCheckout />} /> 
+            <Route path=":id" element={<ProductDetails />} />
             <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
             de error 404
           </Route>
+
+          <Route path="/cart" element= {<RutaProtegida/>}>
+            <Route path="" element={<CartCheckout />} />
+            <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
+            de error 404
+          </Route>
+
+          <Route path="*" element={<Error404 />}></Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>
