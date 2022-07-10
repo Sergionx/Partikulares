@@ -74,7 +74,7 @@ function ProductForm() {
             price: precio,
             categories: [], //No se va a usar, pero la interfaz me obliga a usarlo
             imageUrl: null,
-            _id: null,
+            _id: "",
           }, categorias);
 
         setNombre("");
