@@ -4,8 +4,7 @@ import useProduct from "../../hooks/useProduct";
 
 export function Shop() {
   const { products } = useProduct();
-  let hola =
-    "min-h screen bg-gray-200 flex items-center justify-center antialiased";
+
   return (
     <div className="bg-white">
       <div className="max-w-2xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
