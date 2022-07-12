@@ -16,6 +16,7 @@ import ProductDetails from "./pages/shop/ProductDetails";
 import CartCheckout from "./pages/shop/CartCheckout";
 
 import { AuthProvider } from "./context/AuthProvider";
+import Compra from "./pages/compra/Compra";
 
 function App() {
   return (
@@ -40,12 +41,17 @@ function App() {
             de error 404
           </Route>
 
-          <Route path="/cart" element= {<RutaProtegida/>}>
+          <Route path="/cart" element={<RutaProtegida />}>
             <Route path="" element={<CartCheckout />} />
             <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
             de error 404
           </Route>
 
+          <Route path="/compra" element={<RutaProtegida />}>
+            <Route path="" element={<Compra />} />
+            <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
+            de error 404
+          </Route>
           <Route path="*" element={<Error404 />}></Route>
         </Routes>
       </AuthProvider>
