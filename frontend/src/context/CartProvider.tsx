@@ -1,5 +1,5 @@
 //TODO- Cuando inicie sesión o registre, el carro debe pasar a la BD
-//TODO- Considerar guardar el carro como objeto y que solo contenga productos 
+//TODO- Considerar guardar el carro como objeto y que solo contenga productos
 
 import React, { createContext, useEffect, useState } from "react";
 import IProduct from "../../../backend/models/interfaces/IProduct";
@@ -28,7 +28,6 @@ function CartProvider({ children }: IProps) {
     if (productsCart) {
       setProductsCart(JSON.parse(productsCart));
     } else {
-      console.log("hola");
       localStorage.setItem("productsCart", JSON.stringify([]));
       setProductsCart([]);
     }
@@ -49,38 +48,32 @@ function CartProvider({ children }: IProps) {
     }
 
     const token = localStorage.getItem("token");
-    const productsCartLS = localStorage.getItem("productsCart");
-
+    const productsCartLS = JSON.parse(
+      localStorage.getItem("productsCart")?.toString() || "[]"
+    ) as IProductCart[];
     if (!token) {
       // No inición sesión y no puede acceder a un carro en el backend
 
-      if (productsCartLS) {
-        const productIndex = productsCart.findIndex(
-          (p) => p.product === product._id
-        );
+      const productIndex = productsCart.findIndex(
+        (p) => p.product === product._id
+      );
 
-        if (productIndex >= 0) {
-          // Si ya esta en el carro, aumento la cantidad por 1
-          const productUpdated = productsCart[productIndex];
-          productUpdated.quantity += 1;
-          setProductsCart([...productsCart, productUpdated]);
-        } else {
-          // Si no esta en el carro, lo añado
-          setProductsCart((old) => [
-            ...old,
-            { product: product._id.toString(), quantity: quantity },
-          ]);
-        }
-        localStorage.setItem("productsCart", JSON.stringify(productsCart));
-        mostrarAlertaCart({ msg: "Producto añadido al carro", error: false });
+      if (productIndex >= 0) {
+        // Si ya esta en el carro, aumento su cantidad
+        productsCartLS[productIndex].quantity += quantity;
+        setProductsCart(productsCartLS);
       } else {
-        setProductsCart([
-          ...productsCart,
-          { product: product._id.toString(), quantity: quantity },
-        ]);
-        localStorage.setItem("productsCart", JSON.stringify(productsCart));
-        mostrarAlertaCart({ msg: "Producto añadido al carro", error: false });
+        // Si no esta en el carro, lo añado
+        const productToAdd = {
+          product: product._id.toString(),
+          quantity: quantity,
+        } as IProductCart;
+        
+        productsCartLS.push(productToAdd);
+        setProductsCart(old => [...old, productToAdd]);
       }
+      localStorage.setItem("productsCart", JSON.stringify(productsCartLS));
+      mostrarAlertaCart({ msg: "Producto añadido al carro", error: false });
       return;
     }
     const config = {
@@ -96,11 +89,17 @@ function CartProvider({ children }: IProps) {
       // El usuario tiene un carro
       const { data } = await axiosClient.put(
         "/carts",
-        { productId: product._id as string, quantity: quantity },
+        { productId: product._id.toString(), quantity: quantity },
         config
       );
-      setProductsCart(data.products);
-      localStorage.setItem("productsCart", JSON.stringify(data.products));
+      
+      productsCartLS.push({
+        product: product._id.toString(),
+        quantity: quantity,
+      });
+      
+      setProductsCart(old => [...old, { product: product._id.toString(), quantity: quantity }]);
+      localStorage.setItem("productsCart", JSON.stringify(productsCartLS));
       mostrarAlertaCart({ msg: "Producto añadido al carro", error: false });
     } catch (error: any) {
       console.log(error);
