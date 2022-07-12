@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import IProduct from "../../../../backend/models/interfaces/IProduct";
-import useProduct from "../../hooks/useProduct";
 
 interface IPropsProduct {
   product: IProduct;
@@ -11,7 +10,7 @@ function ProductCard(props: IPropsProduct) {
   const navigate = useNavigate();
 
   function handleImageClick() {
-    navigate(props.product._id!.toString() as string);
+    navigate(props.product._id.toString());
   }
 
   return (
