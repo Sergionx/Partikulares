@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Alert from "../../components/Alert";
 import IAlerta from "../../interfaces/IAlert";
+import useCart from "../../hooks/useCart";
 
 function Register() {
   const [name, setName] = useState("");
@@ -10,6 +11,8 @@ function Register() {
   const [password, setPassword] = useState("");
   const [repetirPassword, setRepetirPassword] = useState("");
   const [alerta, setAlerta] = useState<IAlerta>({ msg: "", error: false });
+
+  const { createCart } = useCart();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -46,6 +49,8 @@ function Register() {
         msg: data.msg,
         error: false,
       });
+
+      createCart()
     } catch (error: any) {
       console.log(error);
       setAlerta({
