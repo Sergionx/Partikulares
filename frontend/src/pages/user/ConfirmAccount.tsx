@@ -4,7 +4,7 @@ import axiosClient from "../../config/axiosClient";
 import Alert from "../../components/Alert";
 import IAlerta from "../../interfaces/IAlert";
 
-// TODO - Arreglar useEffect se ejecuta dos veces
+//REVIEW - Arreglar useEffect se ejecuta dos veces
 function ConfirmAccount() {
   const [alerta, setAlerta] = useState<IAlerta>({ msg: "", error: false });
   const [cuentaConfirmada, setCuentaConfirmada] = useState(false);

@@ -43,6 +43,7 @@ function Login() {
       localStorage.setItem("token", data.token); // TODO - Guardar el token como una cookie
       setAuth(data);
       navigate("/shop"); //TODO - Redireccionar al home
+      // TODO - Penasar si el carrito del usuario será el que tenga guardado o el nuevo
     } catch (error: any) {
       console.log(error);
       setAlerta({
