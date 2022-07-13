@@ -47,7 +47,6 @@ function AuthProvider({ children }: IProps) {
       try {
         const { data } = await axiosClient.get("users/perfil", config);
         setAuth(data.usuario);
-        //navigate("/"); //TODO - Revisar esta linea
       } catch (error) {
         setAuth({
           email: "",

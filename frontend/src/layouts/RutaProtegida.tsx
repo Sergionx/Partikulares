@@ -11,7 +11,6 @@ function RutaProtegida() {
 
   if (cargando) return <p>Cargando</p>;
   //TODO- Arreglar sidebar cuando la pantalla se hace chica (en especial telefonos)
-  //TODO- Temporalmente quitaré <Navigate to="/user" /> del else auth._id?
   return (
     <CartProvider>
       <ProductProvider>
