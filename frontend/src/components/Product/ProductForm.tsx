@@ -65,7 +65,6 @@ function ProductForm() {
       reader.readAsDataURL(selectedFile as any);
 
       reader.onloadend = async () => {
-        //TODO- Considera si ponerlo en ProductProvider
         submitProduct(
           {
             title: nombre,
