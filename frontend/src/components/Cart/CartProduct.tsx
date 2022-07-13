@@ -1,7 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import IProduct from "../../../../backend/models/interfaces/IProduct";
-import useProduct from "../../hooks/useProduct";
+import useCart from "../../hooks/useCart";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrashCan } from "@fortawesome/free-solid-svg-icons";
 
 interface IPropsCartProduct {
   product: IProduct;
@@ -10,35 +12,58 @@ interface IPropsCartProduct {
 
 function CartProduct(props: IPropsCartProduct) {
   const navigate = useNavigate();
+  const { removeProduct } = useCart();
 
   function handleImageClick() {
     navigate(props.product._id.toString());
   }
 
+  async function handleRemoveFromCart(
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>
+  ) {
+    e.preventDefault();
+    try {
+      removeProduct(props.product._id.toString());
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <>
-      <div className="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-        <img
-          src={props.product.imageUrl as string}
-          className="w-full h-full object-center object-cover lg:w-full lg:h-full 
-            hover:cursor-pointer"
-          onClick={handleImageClick}
-        />
-      </div>
-      <div className="mt-4 flex justify-between">
-        <div>
-          <h3 className="text-sm text-gray-700">
+      <div className="flex flex-row bg-white border-2">
+        <div className="bg-gray-200 rounded-md overflow-hidden group-hover:opacity-75 basis-1/4">
+          <img
+            src={props.product.imageUrl as string}
+            className="hover:cursor-pointer"
+            onClick={handleImageClick}
+          />
+        </div>
+
+        <div className="basis-8/12">
+          <h2 className="text-lg text-gray-700 text-center">
             <Link to={props.product._id!.toString() as string} className="">
               {props.product.title}
             </Link>
-          </h3>
+          </h2>
         </div>
-        <p className="text-sm font-medium text-gray-900">
-          {props.product.price} $
-        </p>
-        <p className="text-sm font-medium text-gray-900">
-          cantidad: {props.quantity}
-        </p>
+
+        <div className="flex flex-col basis-1/4">
+          <p className="text-sm font-medium text-gray-900 ">
+            {props.product.price} $
+          </p>
+          <p className="text-sm font-medium text-gray-900">
+            Cantidad: {props.quantity}
+          </p>
+        </div>
+
+        <div className="basis-1/12">
+          <FontAwesomeIcon
+            icon={faTrashCan}
+            onClick={handleRemoveFromCart}
+            className="hover:cursor-pointer"
+          />
+        </div>
       </div>
     </>
   );
