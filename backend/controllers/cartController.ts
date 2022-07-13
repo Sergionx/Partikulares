@@ -38,8 +38,13 @@ async function getCart(req: Request, res: Response) {
 }
 
 async function addProduct(req: Request, res: Response) {
-  const { productId } = req.body;
+  const { productId } = req.params;
   const { quantity } = req.body;
+
+  if (quantity == null) {
+    const error = new Error("La cantidad es obligatoria");
+    return res.status(400).json({ msg: error.message });
+  }
 
   if (quantity < 1) {
     const error = new Error("La cantidad debe ser mayor a 0");
@@ -80,6 +85,38 @@ async function addProduct(req: Request, res: Response) {
   }
 }
 
+async function deleteProduct(req: Request, res: Response) {
+  const { productId } = req.params;
+
+  const cart = await Cart.findOne({ user: req.usuario._id });
+  if (!cart) {
+    const error = new Error(
+      "No existe un usuario con ese id que tenga un carrito"
+    );
+    return res.status(404).json({ msg: error.message });
+  }
+
+  try {
+    const productIndex = cart.products.findIndex(
+      (p: any) => p.product == productId
+    );
+
+    if (productIndex >= 0) {
+      const updatedCart = await Cart.findOneAndUpdate(
+        { user: req.usuario._id },
+        { $pull: { products: { product: productId } }, new: true }
+      );
+
+      res.status(201).json(updatedCart);
+    } else {
+      const error = new Error("El producto no existe en el carrito");
+      return res.status(400).json({ msg: error.message });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function deleteCart(req: Request, res: Response) {
   const cart = await Cart.findOne({ user: req.usuario._id });
   if (!cart) {
@@ -98,4 +135,4 @@ async function deleteCart(req: Request, res: Response) {
   }
 }
 
-export { createCart, getCart, addProduct, deleteCart };
+export { createCart, getCart, addProduct, deleteProduct, deleteCart };
