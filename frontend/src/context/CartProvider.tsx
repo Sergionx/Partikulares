@@ -157,7 +157,6 @@ function CartProvider({ children }: IProps) {
     mostrarAlertaCart({ msg: "Producto eliminado del carro", error: false });
   }
 
-  //REVIEW- Debug metodo
   //NOTE- Used when productsCartLS needs to pass to the backend
   async function createCart() {
     const token = localStorage.getItem("token");
@@ -167,6 +166,10 @@ function CartProvider({ children }: IProps) {
 
     if (!token) {
       mostrarAlertaCart({ msg: "No puedes crear un carro sin iniciar sesión", error: true });
+      return;
+    }
+
+    if (productsCartLS.length === 0) {
       return;
     }
 
