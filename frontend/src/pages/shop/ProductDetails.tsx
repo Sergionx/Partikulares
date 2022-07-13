@@ -34,8 +34,9 @@ function ProductDetails() {
       products: ["627b09a9d43ebb213cda7e29", "627b0a4bd43ebb213cda7e33"],
     },
   ];
+  //TODO- Arreglar overflow de descrption en textos larguisimos
   //TODO- Utilizar una UI mas profesional
-  //TODO_ Arreglar bug que no carga bien las categorias, pero si utilizo la lista de arriba si carga bien
+  //TODO- Arreglar bug que no carga bien las categorias, pero si utilizo la lista de arriba si carga bien
   useEffect(() => {
     obtenerProducto(params.id as string);
 
@@ -60,13 +61,19 @@ function ProductDetails() {
 
   async function handleBuy(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     e.preventDefault();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/user");
+      return;
+    }
+    navigate("/compra", { state: { products: [product], totalPrice: product.price } });
   }
 
   async function handleAddToCart(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) {
     e.preventDefault();
-    addProduct(product, cantidad);
+    addProduct(product._id.toString(), cantidad);
     setCantidad(1);
     //navigate(`/cart/${id}`)
   }
@@ -97,7 +104,7 @@ function ProductDetails() {
               {product.title}
             </h1>
           </div>
-          <p className="text-gray-500 mt-6">{product.description}</p>
+          <p className="text-gray-500 mt-6 ">{product.description}</p>
 
           <div className="mt-6 space-y-12 lg:space-y-0 lg:grid lg:grid-cols-4 lg:gap-x-6">
             {categories.map((category) => (
