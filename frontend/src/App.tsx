@@ -17,43 +17,53 @@ import CartCheckout from "./pages/shop/CartCheckout";
 
 import { AuthProvider } from "./context/AuthProvider";
 import Compra from "./pages/compra/Compra";
+import { CartProvider } from "./context/CartProvider";
+import { ProductProvider } from "./context/ProductProvider";
 
 function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/user" element={<AuthLayout />}>
-            <Route index element={<Login />} />
-            <Route path="registrar" element={<Register />} />
-            <Route path="olvide-password" element={<ForgotPassword />} />
-            <Route path="olvide-password/:token" element={<NewPassword />} />
-            <Route path="confirmar/:id" element={<ConfirmAccount />} />
-            <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
-            de error 404
-          </Route>
+        <ProductProvider>
+          <CartProvider>
+            <Routes>
+              <Route path="/user" element={<AuthLayout />}>
+                <Route index element={<Login />} />
+                <Route path="registrar" element={<Register />} />
+                <Route path="olvide-password" element={<ForgotPassword />} />
+                <Route
+                  path="olvide-password/:token"
+                  element={<NewPassword />}
+                />
+                <Route path="confirmar/:id" element={<ConfirmAccount />} />
+                <Route path="*" element={<Error404 />} /> //TODO - Crear una
+                pagina de error 404
+              </Route>
 
-          <Route path="/shop" element={<RutaProtegida />}>
-            <Route index element={<Shop />} />
-            <Route path="crear-producto" element={<NewProduct />} />
-            <Route path=":id" element={<ProductDetails />} />
-            <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
-            de error 404
-          </Route>
+              <Route path="/shop" element={<RutaProtegida />}>
+                <Route index element={<Shop />} />
+                <Route path="crear-producto" element={<NewProduct />} />
+                <Route path=":id" element={<ProductDetails />} />
+                <Route path="*" element={<Error404 />} /> //TODO - Crear una
+                pagina de error 404
+              </Route>
 
-          <Route path="/cart" element={<RutaProtegida />}>
-            <Route path="" element={<CartCheckout />} />
-            <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
-            de error 404
-          </Route>
+              <Route path="/cart" element={<RutaProtegida />}>
+                <Route index element={<CartCheckout />} />
+                <Route path="*" element={<Error404 />} /> //TODO - Crear una
+                pagina de error 404
+              </Route>
 
-          <Route path="/compra" element={<RutaProtegida />}>
-            <Route path="" element={<Compra />} />
-            <Route path="*" element={<Error404 />} /> //TODO - Crear una pagina
-            de error 404
-          </Route>
-          <Route path="*" element={<Error404 />}></Route>
-        </Routes>
+              <Route path="/compra" element={<RutaProtegida />}>
+                <Route index element={<Compra />} />
+                <Route path="*" element={<Error404 />} /> //TODO - Crear una
+                pagina de error 404
+              </Route>
+
+              <Route path="*" element={<Error404 />}></Route>
+            </Routes>
+          </CartProvider>
+        </ProductProvider>
       </AuthProvider>
     </BrowserRouter>
   );
