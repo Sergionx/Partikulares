@@ -4,8 +4,10 @@ import IProductCart from "../IProductCart";
 
 interface ICartProvider {
   productsCart: IProductCart[];
-  addProduct(product: IProduct, quantity: number): void
   alertaCart: IAlerta
+  addProduct(product: string, quantity: number): void
+  removeProduct(productId: string): void
+  createCart(): void
 }
 
 export default ICartProvider;
