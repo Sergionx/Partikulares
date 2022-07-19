@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes";
 import cartRoutes from "./routes/cartRoutes";
 import productRoutes from "./routes/productRoutes";
 import orderRoutes from "./routes/orderRoutes";
+import payPalOrderRoutes from "./routes/payPalOrderRoutes";
 
 // Others
 import conenctarDb from "./database";
@@ -32,7 +33,7 @@ const corsOptions = {
     }
   },
 };
-app.use(cors(corsOptions));
+app.use(cors());
 
 // Settings
 app.set("port", process.env.PORT || 4000);
@@ -48,6 +49,7 @@ app.use("/api/carts", cartRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/categories", categoriesRoutes);
+app.use("/api/orders/paypal", payPalOrderRoutes);
 
 // Satic files
 
